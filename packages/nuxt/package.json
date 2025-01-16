@@ -1,0 +1,53 @@
+{
+  "name": "@virou/nuxt",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Virou Nuxt Module",
+  "author": "Tankosin<https://github.com/tankosinn>",
+  "license": "MIT",
+  "homepage": "https://github.com/tankosinn/virou#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tankosinn/virou.git",
+    "directory": "packages/nuxt"
+  },
+  "bugs": {
+    "url": "https://github.com/tankosinn/virou/issues"
+  },
+  "keywords": [
+    "vue",
+    "vue-router",
+    "virtual-router",
+    "router",
+    "nuxt",
+    "nuxt3",
+    "nuxt-module"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
+    }
+  },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "nuxt-module-build build"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^3.15.2"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "0.8.4",
+    "@nuxt/schema": "3.15.2",
+    "nuxt": "3.15.2"
+  }
+}

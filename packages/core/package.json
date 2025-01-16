@@ -1,0 +1,55 @@
+{
+  "name": "@virou/core",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Virtual router with multiple instance support for Vue",
+  "author": "Tankosin<https://github.com/tankosinn>",
+  "license": "MIT",
+  "homepage": "https://github.com/tankosinn/virou#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tankosinn/virou.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/tankosinn/virou/issues"
+  },
+  "keywords": [
+    "vue",
+    "vue-router",
+    "virtual-router",
+    "router"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild"
+  },
+  "dependencies": {
+    "@vueuse/core": "^12.4.0",
+    "rou3": "^0.5.1",
+    "ufo": "^1.5.4",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "unbuild": "3.3.1"
+  }
+}

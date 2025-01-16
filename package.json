@@ -1,0 +1,31 @@
+{
+  "name": "@virou/monorepo",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "description": "Virtual router with multiple instance support for Vue",
+  "author": "Tankosin<https://github.com/tankosinn>",
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm -r build",
+    "lint": "eslint --cache .",
+    "lint:fix": "pnpm lint --fix",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "3.14.0",
+    "eslint": "9.18.0",
+    "installed-check": "9.3.0",
+    "lint-staged": "15.4.0",
+    "simple-git-hooks": "2.11.1",
+    "typescript": "5.7.3",
+    "vue-tsc": "2.2.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "pnpm lint:fix"
+  }
+}
