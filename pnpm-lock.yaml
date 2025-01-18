@@ -54,6 +54,9 @@ importers:
       '@nuxt/kit':
         specifier: ^3.15.2
         version: 3.15.2(magicast@0.3.5)(rollup@4.30.1)
+      '@virou/core':
+        specifier: workspace:*
+        version: link:../core
     devDependencies:
       '@nuxt/module-builder':
         specifier: 0.8.4

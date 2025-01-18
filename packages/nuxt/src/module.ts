@@ -1,12 +1,24 @@
-import { defineNuxtModule } from '@nuxt/kit'
+import { addComponent, addImports, defineNuxtModule } from '@nuxt/kit'
 
-export interface ModuleOptions {}
+const functions = [
+  'useVRouter',
+]
 
-export default defineNuxtModule<ModuleOptions>({
+const components = [
+  'VRouterView',
+]
+
+export default defineNuxtModule({
   meta: {
     name: 'virou',
-    configKey: 'virou',
   },
-  defaults: {},
-  setup(_options, _nuxt) {},
+  setup(_options, _nuxt) {
+    functions.forEach((name) => {
+      addImports({ name, as: name, from: '@virou/core', priority: -1 })
+    })
+
+    components.forEach((name) => {
+      void addComponent({ name, export: name, filePath: '@virou/core', priority: -1 })
+    })
+  },
 })
