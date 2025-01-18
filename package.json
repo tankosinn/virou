@@ -8,7 +8,9 @@
   "author": "Tankosin<https://github.com/tankosinn>",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm build:packages",
+    "build:packages": "pnpm --filter \"./packages/**\" build",
+    "build:playgrounds": "pnpm --filter \"./playgrounds/**\" build",
     "lint": "eslint --cache .",
     "lint:fix": "pnpm lint --fix",
     "typecheck": "vue-tsc --noEmit"
