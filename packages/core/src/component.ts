@@ -31,10 +31,10 @@ export const VRouterView = defineComponent({
     provide(router._depthKey, depth + 1)
 
     return () => {
-      const [key, component] = render.value ?? []
+      const [_key, component] = render.value ?? []
 
-      const _key = key ?? props.viewKey ?? route.value.path
-      const ViewComponent = component !== null && component !== undefined ? h(component, { _key }) : null
+      const key = _key ?? props.viewKey ?? route.value.path
+      const ViewComponent = component !== null && component !== undefined ? h(component, { key }) : null
       return props.keepalive ? h(KeepAlive, null, [ViewComponent]) : ViewComponent
     }
   },
