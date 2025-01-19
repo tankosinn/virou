@@ -16,7 +16,8 @@
     "play": "pnpm --filter './playgrounds/vite' dev",
     "play:build": "pnpm --filter './playgrounds/vite' build",
     "play:preview": "pnpm --filter './playgrounds/vite' preview",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "prepare": "simple-git-hooks"
   },
   "devDependencies": {
     "@antfu/eslint-config": "3.14.0",
