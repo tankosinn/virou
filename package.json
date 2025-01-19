@@ -9,6 +9,7 @@
   "license": "MIT",
   "scripts": {
     "build": "pnpm --filter \"./packages/**\" build",
+    "dev": "pnpm play",
     "dev:prepare": "pnpm build",
     "lint": "eslint --cache .",
     "lint:fix": "pnpm lint --fix",
