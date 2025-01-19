@@ -13,6 +13,7 @@
     "dev:prepare": "pnpm build",
     "lint": "eslint --cache .",
     "lint:fix": "pnpm lint --fix",
+    "release": "bumpp -- \"./package.json\" -- \"./packages/*/package.json\" --all",
     "play": "pnpm --filter './playgrounds/vite' dev",
     "play:build": "pnpm --filter './playgrounds/vite' build",
     "play:preview": "pnpm --filter './playgrounds/vite' preview",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "3.14.0",
+    "bumpp": "9.10.1",
     "eslint": "9.18.0",
     "installed-check": "9.3.0",
     "lint-staged": "15.4.1",
