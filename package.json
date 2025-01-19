@@ -1,7 +1,7 @@
 {
   "name": "@virou/monorepo",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "packageManager": "pnpm@9.15.4",
   "description": "Virtual router with multiple instance support for Vue",
