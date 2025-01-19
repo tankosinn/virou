@@ -8,12 +8,13 @@
   "author": "Tankosin<https://github.com/tankosinn>",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm build:packages",
-    "build:packages": "pnpm --filter \"./packages/**\" build",
-    "build:playgrounds": "pnpm --filter \"./playgrounds/**\" build",
-    "build:workspace": "pnpm -r build",
+    "build": "pnpm --filter \"./packages/**\" build",
+    "dev:prepare": "pnpm build",
     "lint": "eslint --cache .",
     "lint:fix": "pnpm lint --fix",
+    "play": "pnpm --filter './playgrounds/vite' dev",
+    "play:build": "pnpm --filter './playgrounds/vite' build",
+    "play:preview": "pnpm --filter './playgrounds/vite' preview",
     "typecheck": "vue-tsc --noEmit"
   },
   "devDependencies": {

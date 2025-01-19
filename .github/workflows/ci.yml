@@ -23,8 +23,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build (workspace)
-        run: pnpm build:workspace
+      - name: Build
+        run: pnpm dev:prepare
 
       - name: Lint
         run: pnpm lint

@@ -29,8 +29,8 @@ jobs:
       - name: Check engine ranges, peer dependency ranges and installed versions
         run: pnpm installed-check -d --fix
 
-      - name: Build (workspace)
-        run: pnpm build:workspace
+      - name: Build
+        run: pnpm dev:prepare
 
       - name: Lint
         run: pnpm lint:fix
