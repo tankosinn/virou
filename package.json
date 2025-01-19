@@ -11,6 +11,7 @@
     "build": "pnpm build:packages",
     "build:packages": "pnpm --filter \"./packages/**\" build",
     "build:playgrounds": "pnpm --filter \"./playgrounds/**\" build",
+    "build:workspace": "pnpm -r build",
     "lint": "eslint --cache .",
     "lint:fix": "pnpm lint --fix",
     "typecheck": "vue-tsc --noEmit"
