@@ -27,7 +27,7 @@ jobs:
         run: pnpm install
 
       - name: Check engine ranges, peer dependency ranges and installed versions
-        run: pnpm installed-check -d --fix
+        run: pnpm installed-check --no-include-workspace-root --ignore-dev --fix
 
       - name: Build
         run: pnpm dev:prepare
