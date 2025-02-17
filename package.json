@@ -22,7 +22,7 @@
     "prepare": "simple-git-hooks"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "3.16.0",
+    "@antfu/eslint-config": "4.2.1",
     "bumpp": "9.11.1",
     "eslint": "9.20.1",
     "installed-check": "9.3.0",
