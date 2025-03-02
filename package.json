@@ -30,7 +30,7 @@
     "simple-git-hooks": "2.11.1",
     "tsx": "4.19.3",
     "typescript": "5.8.2",
-    "vue-tsc": "2.2.6"
+    "vue-tsc": "2.2.8"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
