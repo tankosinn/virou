@@ -47,7 +47,7 @@
     "@virou/core": "workspace:*"
   },
   "devDependencies": {
-    "@nuxt/module-builder": "0.8.4",
+    "@nuxt/module-builder": "1.0.1",
     "@nuxt/schema": "3.17.1",
     "nuxt": "3.17.1"
   }
