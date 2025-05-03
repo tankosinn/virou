@@ -25,14 +25,10 @@
   ],
   "sideEffects": false,
   "exports": {
-    ".": {
-      "types": "./dist/types.d.ts",
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
-    }
+    "types": "./dist/types.d.mts",
+    "default": "./dist/module.mjs"
   },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "main": "./dist/module.mjs",
   "files": [
     "dist"
   ],
@@ -43,12 +39,12 @@
     "build": "nuxt-module-build build"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.17.1",
+    "@nuxt/kit": "catalog:",
     "@virou/core": "workspace:*"
   },
   "devDependencies": {
-    "@nuxt/module-builder": "0.8.4",
-    "@nuxt/schema": "3.17.1",
-    "nuxt": "3.17.1"
+    "@nuxt/module-builder": "catalog:",
+    "@nuxt/schema": "catalog:",
+    "nuxt": "catalog:"
   }
 }
