@@ -9,7 +9,7 @@ catalog:
   '@nuxt/schema': 3.17.1
   '@vueuse/core': ^13.1.0
   bumpp: 10.1.0
-  eslint: 9.25.1
+  eslint: 9.26.0
   installed-check: 9.3.0
   lint-staged: 15.5.1
   nuxt: 3.17.1
