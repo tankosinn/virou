@@ -1,54 +1,70 @@
 import type { RouterContext } from 'rou3'
-import type { AsyncComponentLoader, Component, ComputedRef } from 'vue'
+import type { Component, ComputedRef, DefineComponent, Ref } from 'vue'
 
-export type VRouteTreeNode = [key: string, children?: VRouteTreeNode[]]
+type Lazy<T> = () => Promise<T>
 
-export type VRouteViews = Record<string, Component[]>
+export type VRouteComponent = Component | DefineComponent
+export type VRouteLazyComponent = Lazy<VRouteComponent>
+export type VRouteRenderComponent = VRouteComponent | VRouteLazyComponent
 
-export type VRouteKeys = Record<string, Array<string | null>>
+export type VRouteMeta = Record<PropertyKey, unknown>
 
-export type VRouteRenderView = [key: string, component: Component]
-
-export interface VRouteRecordRaw {
-  key?: string
+export interface VRouteRaw {
   path: string
-  component: AsyncComponentLoader<Component>
-  meta?: Record<string, any>
-  children?: VRouteRecordRaw[]
+  component: VRouteRenderComponent
+  meta?: VRouteMeta
+  children?: VRouteRaw[]
 }
+
+export type VRouteId = Readonly<[path: string, depth: number]>
 
 export interface VRouteMatchedData {
-  key?: string
-  fullPath: string
-  meta?: Record<string, any>
+  id: VRouteId
+  meta?: VRouteMeta
 }
 
-export interface VRouterInstance {
+export interface VRouteNormalized extends Omit<VRouteRaw, 'path' | 'children'> {
+  parentId?: VRouteId
+}
+
+export type VRoutesMap = Map<VRouteId, VRouteNormalized>
+
+export interface VRoute {
+  fullPath: string
+  meta?: VRouteMeta
+  params?: Record<string, string>
+  path: string
+  search: string
+  hash: string
+  _renderList: Component[] | null
+}
+
+export interface VRouterData {
   context: RouterContext<VRouteMatchedData>
-  routeTree: VRouteTreeNode[]
-  views: VRouteViews
-  keys: VRouteKeys
+  routes: VRoutesMap
+  activePath: Ref<string>
+  route: ComputedRef<VRoute>
+  _isGlobal: boolean
+  _deps: number
 }
 
 export interface VRouterOptions {
-  initialPath: string
+  initialPath?: string
+  _isGlobal?: boolean
 }
 
 export interface VRouter {
-  route: ComputedRef<{
-    fullPath: string
-    data?: VRouteMatchedData
-    params?: Record<string, string>
-    path: string
-    search: string
-    hash: string
-    activeRouteTree?: string[]
-    renderList?: VRouteRenderView[]
-  }>
+  route: VRouterData['route']
   router: {
-    addRoute: (route: VRouteRecordRaw) => void
+    addRoute: (route: VRouteRaw) => void
     replace: (path: string) => void
-    _key: string
     _depthKey: symbol
   }
+}
+
+export interface VirouPluginOptions {
+  routers?: Record<string, {
+    routes: VRouteRaw[]
+    options?: Omit<VRouterOptions, '_isGlobal'>
+  }>
 }

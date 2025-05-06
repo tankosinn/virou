@@ -1,41 +1,56 @@
-import { computed, defineComponent, h, inject, KeepAlive, provide } from 'vue'
+import type { PropType } from 'vue'
+import type { VRoute } from './types'
+import {
+  defineComponent,
+  h,
+  inject,
+  KeepAlive,
+  provide,
+  Suspense,
+} from 'vue'
 import { useVRouter, virouSymbol } from './router'
 
 export const VRouterView = defineComponent({
   name: 'VRouterView',
+  inheritAttrs: false,
   props: {
-    routerKey: {
-      type: String,
-      default: undefined,
-    },
-    viewKey: {
-      type: String,
-      default: undefined,
-    },
-    keepalive: {
-      type: Boolean,
-      default: false,
-    },
+    routerKey: String,
+    keepAlive: { type: Boolean, default: false },
+    viewKey: { type: [String, Function] as PropType<string | ((route: VRoute, key: string) => string)> },
   },
-  setup(props) {
-    const routerKey = props.routerKey ?? inject<string>(virouSymbol)
-
-    if (routerKey === undefined) {
-      throw new Error(`[virou] [VRouterView] routerKey is required`)
+  setup(props, { slots, attrs }) {
+    const key = props.routerKey ?? inject<string>(virouSymbol)
+    if (key === undefined) {
+      throw new Error('[virou] [VRouterView] routerKey is required')
     }
+    const { route, router } = useVRouter(key)
 
-    const { router, route } = useVRouter(routerKey)
-    const depth = inject(router._depthKey, 0)
-    const render = computed(() => route.value.renderList?.[depth])
-
+    const depth = inject<number>(router._depthKey, 0)
     provide(router._depthKey, depth + 1)
 
     return () => {
-      const [_key, component] = render.value ?? []
+      const component = route.value._renderList?.[depth]
+      if (!component) {
+        return slots.default?.({ Component: null, route: route.value }) ?? null
+      }
 
-      const key = _key ?? props.viewKey ?? route.value.path
-      const ViewComponent = component !== null && component !== undefined ? h(component, { key }) : null
-      return props.keepalive ? h(KeepAlive, null, [ViewComponent]) : ViewComponent
+      const vnodeKey = typeof props.viewKey === 'function'
+        ? props.viewKey(route.value, key)
+        : props.viewKey ?? `${key}-${depth}-${route.value.fullPath}`
+
+      let vnode = h(component, { key: vnodeKey, ...attrs })
+
+      if (props.keepAlive) {
+        vnode = h(KeepAlive, null, { default: () => vnode })
+      }
+
+      const suspense = h(
+        Suspense,
+        null,
+        { default: () => vnode, fallback: () => slots.fallback?.() ?? null },
+      )
+
+      return slots.default?.({ Component: suspense, route: route.value }) ?? suspense
     }
   },
 })

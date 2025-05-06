@@ -6,18 +6,17 @@ const { router, route } = useVRouter()
 
 const currentDepth = inject(router._depthKey, 1) - 1
 
-const routerDepth = computed(() => (route.value.renderList?.length ?? 0) - 1)
+const routerDepth = computed(() => (route.value._renderList?.length ?? 0) - 1)
 </script>
 
 <template>
   <div class="route-info">
-    <div v-if="currentDepth === routerDepth && route.data?.meta">
-      <h2>{{ route.data.meta.title }}</h2>
-      <p>{{ route.data.meta.description }}</p>
+    <div v-if="currentDepth === routerDepth && route.meta">
+      <h2>{{ route.meta.title }}</h2>
+      <p>{{ route.meta.description }}</p>
       <hr>
     </div>
 
-    <p>Path: {{ route.renderList?.[currentDepth]?.[0] }}</p>
     <p>Depth: {{ currentDepth }}</p>
 
     <VRouterView />
