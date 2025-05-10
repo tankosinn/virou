@@ -45,14 +45,14 @@ export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VR
   }
 }
 
-export function useVRouter(routes?: VRouteRaw[]): VRouter
-export function useVRouter(key?: string, routes?: VRouteRaw[]): VRouter
+export function useVRouter(routes?: VRouteRaw[], options?: VRouterOptions): VRouter
+export function useVRouter(key?: string, routes?: VRouteRaw[], options?: VRouterOptions): VRouter
 export function useVRouter(...args: any[]): VRouter {
   if (typeof args[0] !== 'string') {
     args.unshift(inject<string>(virouSymbol, useId()))
   }
 
-  const [key, routes = []] = args as [string, VRouteRaw[]]
+  const [key, routes = [], options = {}] = args as [string, VRouteRaw[], VRouterOptions]
 
   if (!key || typeof key !== 'string') {
     throw new TypeError(`[virou] [useVRouter] key must be a string: ${key}`)
@@ -75,7 +75,7 @@ export function useVRouter(...args: any[]): VRouter {
       throw new Error(`[virou] [useVRouter] router with key "${key}" already exists`)
     }
 
-    virou.set(key, createVRouter(routes))
+    virou.set(key, createVRouter(routes, options))
   }
 
   const router = virou.get(key)
