@@ -1,7 +1,16 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "baseUrl": ".",
+    "rootDir": ".",
     "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@virou/core": ["packages/core/src/index.ts"],
+      "@virou/core/*": ["packages/core/src/*"],
+      "@virou/nuxt": ["packages/nuxt/src/module.ts"],
+      "@virou/nuxt/*": ["packages/nuxt/src/*"]
+    },
     "resolveJsonModule": true,
     "allowJs": true,
     "checkJs": true,
