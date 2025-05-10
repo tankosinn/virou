@@ -22,11 +22,9 @@ export function registerRoutes(
 ) {
   for (const { path, meta, component, children } of routes) {
     const fullPath = joinURL(parentId?.[0] ?? '/', path)
-    const depth = (parentId?.[1] ?? 0) + 1
+    const depth = (parentId?.[1] ?? -1) + 1
 
     const id: VRouteId = Object.freeze([fullPath, depth])
-
-    addRoute(ctx, 'GET', fullPath, { id, meta })
 
     registry.set(id, {
       meta,
@@ -37,6 +35,8 @@ export function registerRoutes(
     if (children && children.length) {
       registerRoutes(ctx, children, registry, id)
     }
+
+    addRoute(ctx, 'GET', fullPath, { id, meta })
   }
 }
 
@@ -57,7 +57,7 @@ export function createRenderList(
 
   const depth = data.id[1]
   const list = Array.from<VRouteRenderComponent>({ length: depth })
-  let idx = depth - 1
+  let idx = depth
   let cursor = routes.get(data.id)
   while (cursor) {
     list[idx--] = cursor.component
