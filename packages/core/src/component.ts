@@ -1,4 +1,4 @@
-import type { PropType } from 'vue'
+import type { PropType, SlotsType, VNodeChild } from 'vue'
 import type { VRoute } from './types'
 import {
   defineComponent,
@@ -18,6 +18,10 @@ export const VRouterView = defineComponent({
     keepAlive: { type: Boolean, default: false },
     viewKey: { type: [String, Function] as PropType<string | ((route: VRoute, key: string) => string)> },
   },
+  slots: Object as SlotsType<{
+    default: (payload: { Component: VNodeChild, route: VRoute }) => VNodeChild
+    fallback: (payload: { route: VRoute }) => VNodeChild
+  }>,
   setup(props, { slots, attrs }) {
     const key = props.routerKey ?? inject<string>(virouSymbol)
     if (key === undefined) {
@@ -44,7 +48,7 @@ export const VRouterView = defineComponent({
         null,
         {
           default: () => h(component, { key: vnodeKey, ...attrs }),
-          fallback: () => slots.fallback?.() ?? null,
+          fallback: () => slots.fallback?.({ route: route.value }) ?? null,
         },
       )
 
