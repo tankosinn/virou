@@ -23,6 +23,7 @@ export const VRouterView = defineComponent({
     if (key === undefined) {
       throw new Error('[virou] [VRouterView] routerKey is required')
     }
+
     const { route, router } = useVRouter(key)
 
     const depth = inject<number>(router._depthKey, 0)
@@ -38,7 +39,7 @@ export const VRouterView = defineComponent({
         ? props.viewKey(route.value, key)
         : props.viewKey ?? `${key}-${depth}-${route.value.fullPath}`
 
-      let vnode = h(
+      const suspenseVNode = h(
         Suspense,
         null,
         {
@@ -47,9 +48,9 @@ export const VRouterView = defineComponent({
         },
       )
 
-      vnode = props.keepAlive
-        ? h(KeepAlive, null, { default: () => vnode })
-        : vnode
+      const vnode = props.keepAlive
+        ? h(KeepAlive, null, { default: () => suspenseVNode })
+        : suspenseVNode
 
       return slots.default?.({ Component: vnode, route: route.value }) ?? vnode
     }
