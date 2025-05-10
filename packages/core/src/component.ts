@@ -38,19 +38,20 @@ export const VRouterView = defineComponent({
         ? props.viewKey(route.value, key)
         : props.viewKey ?? `${key}-${depth}-${route.value.fullPath}`
 
-      let vnode = h(component, { key: vnodeKey, ...attrs })
-
-      if (props.keepAlive) {
-        vnode = h(KeepAlive, null, { default: () => vnode })
-      }
-
-      const suspense = h(
+      let vnode = h(
         Suspense,
         null,
-        { default: () => vnode, fallback: () => slots.fallback?.() ?? null },
+        {
+          default: () => h(component, { key: vnodeKey, ...attrs }),
+          fallback: () => slots.fallback?.() ?? null,
+        },
       )
 
-      return slots.default?.({ Component: suspense, route: route.value }) ?? suspense
+      vnode = props.keepAlive
+        ? h(KeepAlive, null, { default: () => vnode })
+        : vnode
+
+      return slots.default?.({ Component: vnode, route: route.value }) ?? vnode
     }
   },
 })
