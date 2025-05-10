@@ -6,9 +6,7 @@
     "moduleResolution": "Bundler",
     "paths": {
       "@virou/core": ["packages/core/src/index.ts"],
-      "@virou/core/*": ["packages/core/src/*"],
-      "@virou/nuxt": ["packages/nuxt/src/module.ts"],
-      "@virou/nuxt/*": ["packages/nuxt/src/*"]
+      "@virou/core/*": ["packages/core/src/*"]
     },
     "resolveJsonModule": true,
     "allowJs": true,
@@ -25,6 +23,7 @@
   },
   "exclude": [
     "node_modules",
+    "coverage",
     "**/dist"
   ]
 }
