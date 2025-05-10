@@ -23,11 +23,35 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build
-        run: pnpm dev:prepare
-
       - name: Lint
         run: pnpm lint
 
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node: [20.x, 22.x]
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm dev:prepare
+
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
