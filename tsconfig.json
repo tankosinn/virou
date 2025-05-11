@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "baseUrl": ".",
     "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@virou/core": ["packages/core/src/index.ts"],
+      "@virou/core/*": ["packages/core/src/*"]
+    },
     "resolveJsonModule": true,
     "allowJs": true,
     "checkJs": true,
@@ -17,6 +23,7 @@
   },
   "exclude": [
     "node_modules",
+    "coverage",
     "**/dist"
   ]
 }

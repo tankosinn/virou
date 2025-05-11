@@ -1,84 +1,69 @@
-import type { VRouteKeys, VRouteRecordRaw, VRouteRenderView, VRouterInstance, VRouteTreeNode, VRouteViews } from './types'
+import type { RouterContext } from 'rou3'
+import type { Component } from 'vue'
+import type { VRouteId, VRouteLazyComponent, VRouteMatchedData, VRouteRaw, VRouteRenderComponent, VRoutesMap } from './types'
 import { addRoute } from 'rou3'
 import { joinURL } from 'ufo'
 import { defineAsyncComponent } from 'vue'
 
-export function addRoutes(router: VRouterInstance, routes: VRouteRecordRaw[], parentPath = ''): void {
-  const { context, routeTree, views, keys } = router
+const renderListCache = new WeakMap<VRoutesMap, Map<VRouteId, Component[]>>()
 
-  routes.forEach(({ key, path, component, meta, children }) => {
-    const fullPath = joinURL(parentPath, path)
-
-    views[fullPath] ||= []
-    views[fullPath].push(defineAsyncComponent(component))
-
-    keys[fullPath] ||= []
-    keys[fullPath].push(key ?? null)
-
-    addRoute(context, 'GET', fullPath, { key, fullPath, meta })
-
-    const node: VRouteTreeNode = [fullPath]
-    if (children) {
-      const childRouteTree: VRouteTreeNode[] = []
-      addRoutes({ ...router, routeTree: childRouteTree }, children, fullPath)
-      node[1] = childRouteTree
-    }
-
-    routeTree.push(node)
-  })
+function normalizeComponent(component: VRouteRenderComponent): Component {
+  if (typeof component === 'function' && (component as VRouteLazyComponent).length === 0) {
+    return defineAsyncComponent(component as VRouteLazyComponent)
+  }
+  return component as Component
 }
 
-export function resolveRouteTree(
-  routeTree: VRouteTreeNode[],
-  targetPath: string,
-  accumulatedPaths: string[] = [],
-): string[] {
-  for (const [path, children] of routeTree) {
-    const paths = [...accumulatedPaths, path]
+export function registerRoutes(
+  ctx: RouterContext<VRouteMatchedData>,
+  routes: VRouteRaw[],
+  registry: VRoutesMap,
+  parentId?: VRouteId,
+) {
+  for (const { path, meta, component, children } of routes) {
+    const fullPath = joinURL(parentId?.[0] ?? '/', path)
+    const depth = (parentId?.[1] ?? -1) + 1
 
-    if (path === targetPath) {
-      return paths
+    const id: VRouteId = Object.freeze([fullPath, depth])
+
+    registry.set(id, {
+      meta,
+      component: normalizeComponent(component),
+      parentId,
+    })
+
+    if (children && children.length) {
+      registerRoutes(ctx, children, registry, id)
     }
 
-    if (children) {
-      const result = resolveRouteTree(children, targetPath, paths)
-      if (result.length) {
-        return result
-      }
-    }
+    addRoute(ctx, 'GET', fullPath, { id, meta })
   }
-
-  return []
 }
 
 export function createRenderList(
-  routes: string[],
-  targetPath: string,
-  views: VRouteViews,
-  keys: VRouteKeys,
-): VRouteRenderView[] {
-  const renderList: VRouteRenderView[] = []
-  const currentSegments = targetPath.split('/').filter(Boolean)
+  data: VRouteMatchedData,
+  routes: VRoutesMap,
+): VRouteRenderComponent[] {
+  let cacheForRoutes = renderListCache.get(routes)
+  if (!cacheForRoutes) {
+    cacheForRoutes = new Map<VRouteId, Component[]>()
+    renderListCache.set(routes, cacheForRoutes)
+  }
 
-  routes.forEach((path) => {
-    const treeViews = views[path]
-    const treeKeys = keys[path]
+  const cached = cacheForRoutes.get(data.id)
+  if (cached) {
+    return cached
+  }
 
-    if (treeViews === undefined || treeKeys === undefined || treeViews.length !== treeKeys.length) {
-      throw new Error(`[virou] Mismatch or missing data for path: ${path}`)
-    }
+  const depth = data.id[1]
+  const list = Array.from<VRouteRenderComponent>({ length: depth })
+  let idx = depth
+  let cursor = routes.get(data.id)
+  while (cursor) {
+    list[idx--] = cursor.component
+    cursor = cursor.parentId !== undefined ? routes.get(cursor.parentId) : undefined
+  }
 
-    const resolvedPath = joinURL('/', ...currentSegments.slice(0, path.split('/').filter(Boolean).length))
-
-    for (let i = 0; i < treeViews.length; i++) {
-      const view = treeViews[i]
-      const key = treeKeys[i] as string | undefined
-
-      if (view !== undefined && key !== undefined && (targetPath === resolvedPath || i === 0)) {
-        renderList.push([key ?? resolvedPath, view])
-      }
-    }
-  })
-
-  return renderList
+  cacheForRoutes.set(data.id, list)
+  return list
 }

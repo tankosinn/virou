@@ -18,18 +18,25 @@
     "play": "pnpm --filter './playgrounds/vite' dev",
     "play:build": "pnpm --filter './playgrounds/vite' build",
     "play:preview": "pnpm --filter './playgrounds/vite' preview",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
     "typecheck": "vue-tsc --noEmit",
     "prepare": "simple-git-hooks"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "@vue/test-utils": "catalog:",
     "bumpp": "catalog:",
     "eslint": "catalog:",
+    "happy-dom": "catalog:",
     "installed-check": "catalog:",
     "lint-staged": "catalog:",
     "simple-git-hooks": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
+    "vitest": "catalog:",
     "vue-tsc": "catalog:"
   },
   "simple-git-hooks": {

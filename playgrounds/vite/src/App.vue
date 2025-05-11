@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { useVRouter, VRouterView } from '@virou/core'
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { VueShikiInput } from 'vue-shiki-input'
 import NavigationMenu from './components/NavigationMenu.vue'
+import RouteInfo from './components/RouteInfo.vue'
 import 'vue-shiki-input/style.css'
 
 const routes = [
   {
     path: '/',
-    component: () => import('./components/RouteInfo.vue'),
+    component: RouteInfo,
     meta: {
       title: 'Home',
       description: 'Home page',
@@ -16,7 +17,7 @@ const routes = [
   },
   {
     path: '/about',
-    component: () => import('./components/RouteInfo.vue'),
+    component: defineAsyncComponent(() => import('./components/RouteInfo.vue')),
     meta: {
       title: 'About',
       description: 'About page',

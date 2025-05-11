@@ -50,5 +50,6 @@ Temporary Items
 .env.*
 !.env.example
 
+coverage
 .pnpm-store
 .eslintcache
