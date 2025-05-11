@@ -35,7 +35,6 @@
     "vue": "^3.5.0"
   },
   "dependencies": {
-    "@vueuse/core": "catalog:",
     "rou3": "catalog:",
     "ufo": "catalog:"
   },

@@ -27,9 +27,6 @@ catalogs:
     '@vue/test-utils':
       specifier: 2.4.6
       version: 2.4.6
-    '@vueuse/core':
-      specifier: ^13.1.0
-      version: 13.1.0
     bumpp:
       specifier: 10.1.0
       version: 10.1.0
@@ -122,9 +119,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@vueuse/core':
-        specifier: 'catalog:'
-        version: 13.1.0(vue@3.5.13(typescript@5.8.3))
       rou3:
         specifier: 'catalog:'
         version: 0.6.1
