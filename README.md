@@ -3,7 +3,7 @@
 <p>
   <a href="https://www.npmjs.com/package/@virou/core"><img src="https://img.shields.io/npm/v/@virou/core.svg?style=flat&colorA=18181B&colorB=39737d" alt="Version"></a>
   <a href="https://www.npmjs.com/package/@virou/core"><img src="https://img.shields.io/npm/dm/@virou/core.svg?style=flat&colorA=18181B&colorB=39737d" alt="Downloads"></a>
-  <a href="https://img.shields.io/bundlephobia/min/@virou/core?style=flat&colorA=18181B&colorB=39737d" alt="Bundle Size"></a>
+  <a href="https://bundlephobia.com/package/@virou/core"><img src="https://img.shields.io/bundlephobia/min/@virou/core?style=flat&colorA=18181B&colorB=39737d" alt="Bundle Size"></a>
   <a href="https://github.com/tankosinn/virou/tree/main/LICENSE"><img src="https://img.shields.io/github/license/tankosinn/virou.svg?style=flat&colorA=18181B&colorB=39737d" alt="License"></a>
 </p>
 
