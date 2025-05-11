@@ -1,7 +1,7 @@
-import type { VRouteMatchedData, VRouter, VRouteRaw, VRouterData, VRouterOptions, VRoutesMap } from './types'
+import type { VRoute, VRouteMatchedData, VRouter, VRouteRaw, VRouterData, VRouterOptions, VRoutesMap } from './types'
 import { createRouter, findRoute } from 'rou3'
 import { parseURL } from 'ufo'
-import { computed, getCurrentInstance, inject, onScopeDispose, provide, ref, useId } from 'vue'
+import { getCurrentInstance, inject, onScopeDispose, provide, ref, shallowRef, useId, watchEffect } from 'vue'
 import { createRenderList, registerRoutes } from './utils'
 
 export const virouSymbol = Symbol('virou')
@@ -13,26 +13,25 @@ export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VR
 
   const activePath = ref(options?.initialPath ?? '/')
 
-  const route = computed(() => {
-    const matchedRoute = findRoute(
-      context,
-      'GET',
-      activePath.value,
-    )
-
+  const snapshot = () => {
+    const matchedRoute = findRoute(context, 'GET', activePath.value)
     const _renderList = matchedRoute ? createRenderList(matchedRoute.data, routeRegistry) : null
-
-    const { search, pathname, hash } = parseURL(activePath.value)
-
+    const { pathname, hash, search } = parseURL(activePath.value)
     return {
       fullPath: activePath.value,
+      path: pathname,
+      search,
+      hash,
       meta: matchedRoute?.data.meta,
       params: matchedRoute?.params,
-      search,
-      path: pathname,
-      hash,
       _renderList,
     }
+  }
+
+  const route = shallowRef<VRoute>(snapshot())
+
+  const unwatch = watchEffect(() => {
+    route.value = snapshot()
   })
 
   return {
@@ -42,6 +41,7 @@ export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VR
     route,
     _isGlobal: options?._isGlobal ?? false,
     _deps: 0,
+    _dispose: unwatch,
   }
 }
 
@@ -88,6 +88,7 @@ export function useVRouter(...args: any[]): VRouter {
     router._deps--
 
     if (router._deps === 0 && !router._isGlobal) {
+      router._dispose()
       virou.delete(key)
     }
   })

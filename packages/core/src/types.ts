@@ -1,5 +1,5 @@
 import type { RouterContext } from 'rou3'
-import type { Component, ComputedRef, DefineComponent, Ref } from 'vue'
+import type { Component, DefineComponent, Ref, ShallowRef } from 'vue'
 
 type Lazy<T> = () => Promise<T>
 
@@ -43,9 +43,10 @@ export interface VRouterData {
   context: RouterContext<VRouteMatchedData>
   routes: VRoutesMap
   activePath: Ref<string>
-  route: ComputedRef<VRoute>
+  route: ShallowRef<VRoute>
   _isGlobal: boolean
   _deps: number
+  _dispose: () => void
 }
 
 export interface VRouterOptions {
