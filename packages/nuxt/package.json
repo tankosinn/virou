@@ -40,7 +40,8 @@
   },
   "dependencies": {
     "@nuxt/kit": "catalog:",
-    "@virou/core": "workspace:*"
+    "@virou/core": "workspace:*",
+    "defu": "catalog:"
   },
   "devDependencies": {
     "@nuxt/module-builder": "catalog:",

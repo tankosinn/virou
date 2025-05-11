@@ -1,4 +1,6 @@
-import { addComponent, addImports, defineNuxtModule } from '@nuxt/kit'
+import type { VirouPluginOptions } from '@virou/core'
+import { addComponent, addImports, addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
+import { defu } from 'defu'
 
 const functions = [
   'useVRouter',
@@ -8,17 +10,32 @@ const components = [
   'VRouterView',
 ]
 
-export default defineNuxtModule({
+export interface ModuleOptions extends VirouPluginOptions {}
+
+export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'virou',
+    name: '@virou/nuxt',
+    configKey: 'virou',
   },
-  setup(_options, _nuxt) {
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
+
+    nuxt.options.runtimeConfig.public.virou = defu(nuxt.options.runtimeConfig.public.virou, options)
+
+    addPlugin(resolver.resolve('./runtime/plugin'))
+
     functions.forEach((name) => {
       addImports({ name, as: name, from: '@virou/core', priority: -1 })
     })
 
     components.forEach((name) => {
-      void addComponent({ name, export: name, filePath: '@virou/core', priority: -1 })
+      addComponent({ name, export: name, filePath: '@virou/core', priority: -1 })
     })
   },
 })
+
+declare module '@nuxt/schema' {
+  interface PublicRuntimeConfig {
+    virou?: ModuleOptions
+  }
+}

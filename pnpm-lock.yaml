@@ -30,6 +30,9 @@ catalogs:
     bumpp:
       specifier: 10.1.0
       version: 10.1.0
+    defu:
+      specifier: ^6.1.4
+      version: 6.1.4
     eslint:
       specifier: 9.26.0
       version: 9.26.0
@@ -141,6 +144,9 @@ importers:
       '@virou/core':
         specifier: workspace:*
         version: link:../core
+      defu:
+        specifier: 'catalog:'
+        version: 6.1.4
     devDependencies:
       '@nuxt/module-builder':
         specifier: 'catalog:'

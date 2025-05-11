@@ -12,6 +12,7 @@ catalog:
   '@vue/test-utils': 2.4.6
   '@vueuse/core': ^13.1.0
   bumpp: 10.1.0
+  defu: ^6.1.4
   eslint: 9.26.0
   happy-dom: 17.4.7
   installed-check: 9.3.0
