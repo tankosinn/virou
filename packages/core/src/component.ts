@@ -41,7 +41,7 @@ export const VRouterView = defineComponent({
 
       const vnodeKey = typeof props.viewKey === 'function'
         ? props.viewKey(route.value, key)
-        : props.viewKey ?? `${key}-${depth}-${route.value.fullPath}`
+        : props.viewKey ?? `${key}-${depth}-${route.value.path}`
 
       const suspenseVNode = h(
         Suspense,
