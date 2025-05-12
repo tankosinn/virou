@@ -223,6 +223,122 @@ describe('component', () => {
     expect(ka.findComponent(Root).exists()).toBe(true)
   })
 
+  it('should preserve component instance state when `keepAlive` is true across route changes', async () => {
+    const Counter = defineComponent({
+      name: 'Counter',
+      setup() {
+        const count = ref(0)
+        onMounted(() => {
+          count.value++
+        })
+        return () => h('div', `count: ${count.value}`)
+      },
+    })
+
+    const routes: VRouteRaw[] = [
+      { path: '/', component: Counter },
+      { path: '/other', component: { name: 'Other', render: () => null } },
+    ]
+
+    let router!: VRouter['router']
+
+    const wrapper = mountWithPlugin(defineComponent({
+      setup() {
+        const { router: r } = useVRouter(routes)
+        router = r
+        return () => h(VRouterView, { keepAlive: true })
+      },
+    }))
+
+    await nextTick()
+    expect(wrapper.text()).toBe('count: 1')
+
+    router.replace('/other')
+    await nextTick()
+    expect(wrapper.text()).toBe('')
+
+    router.replace('/')
+    await nextTick()
+    expect(wrapper.text()).toBe('count: 1')
+  })
+
+  it('should preserve each child component instance state when `keepAlive` is true across route changes', async () => {
+    const createCounter = (name: string, nested = false) => defineComponent({
+      name,
+      setup() {
+        const count = ref(0)
+        onMounted(() => {
+          count.value++
+        })
+        return () => h('div', [
+          h('span', { 'data-test': name }, `${name} count: ${count.value}`),
+          ...nested ? [h(VRouterView, { keepAlive: true })] : [],
+        ])
+      },
+    })
+
+    const [Wrapper, DefaultChild, Child, Other] = [
+      createCounter('Wrapper', true),
+      createCounter('DefaultChild'),
+      createCounter('Child'),
+      createCounter('Other'),
+    ]
+
+    const routes: VRouteRaw[] = [
+      {
+        path: '/',
+        component: Wrapper,
+        children: [
+          {
+            path: '',
+            component: DefaultChild,
+          },
+          {
+            path: '/child',
+            component: Child,
+          },
+        ],
+      },
+      {
+        path: '/other',
+        component: Other,
+      },
+    ]
+
+    let router!: VRouter['router']
+    const wrapper = mountWithPlugin(defineComponent({
+      setup() {
+        const { router: r } = useVRouter(routes)
+        router = r
+        return () => h(VRouterView, { keepAlive: true })
+      },
+    }))
+
+    await nextTick()
+
+    expect(wrapper.find('[data-test="Wrapper"]').text()).toContain('Wrapper count: 1')
+    expect(wrapper.find('[data-test="DefaultChild"]').text()).toContain('DefaultChild count: 1')
+
+    router.replace('/child')
+    await nextTick()
+    expect(wrapper.find('[data-test="Wrapper"]').text()).toContain('Wrapper count: 1')
+    expect(wrapper.find('[data-test="Child"]').text()).toContain('Child count: 1')
+
+    router.replace('/other')
+    await nextTick()
+    expect(wrapper.find('[data-test="Other"]').text()).toContain('Other count: 1')
+
+    router.replace('/')
+    await nextTick()
+    expect(wrapper.find('[data-test="Wrapper"]').text()).toContain('Wrapper count: 1')
+    expect(wrapper.find('[data-test="DefaultChild"]').text()).toContain('DefaultChild count: 1')
+
+    router.replace('/child')
+    await nextTick()
+    expect(wrapper.find('[data-test="Wrapper"]').text()).toContain('Wrapper count: 1')
+    expect(wrapper.find('[data-test="Child"]').text()).toContain('Child count: 1')
+  })
+
   it('should render the fallback slot while an async component is loading', async () => {
     vi.useFakeTimers()
 
@@ -317,44 +433,6 @@ describe('component', () => {
     expect(root.props('foo')).toBe('hello-world')
     expect(root.attributes('data-test')).toBe('wrapped')
     expect(root.text()).toBe('foo is hello-world')
-  })
-
-  it('should preserve component instance state when `keepAlive` is true across route changes', async () => {
-    const Counter = defineComponent({
-      name: 'Counter',
-      setup() {
-        const count = ref(0)
-        onMounted(() => {
-          count.value++
-        })
-        return () => h('div', `count: ${count.value}`)
-      },
-    })
-    const routes: VRouteRaw[] = [
-      { path: '/', component: Counter },
-      { path: '/other', component: { name: 'Other', render: () => null } },
-    ]
-
-    let router!: VRouter['router']
-
-    const wrapper = mountWithPlugin(defineComponent({
-      setup() {
-        const { router: r } = useVRouter(routes)
-        router = r
-        return () => h(VRouterView, { keepAlive: true })
-      },
-    }))
-
-    await nextTick()
-    expect(wrapper.text()).toBe('count: 1')
-
-    router.replace('/other')
-    await nextTick()
-    expect(wrapper.text()).toBe('')
-
-    router.replace('/')
-    await nextTick()
-    expect(wrapper.text()).toBe('count: 1')
   })
 
   it('should render the default slot when there is no matched component', () => {
