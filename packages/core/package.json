@@ -1,7 +1,7 @@
 {
   "name": "@virou/core",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Virtual router with multiple instance support for Vue",
   "author": "Tankosin<https://github.com/tankosinn>",
   "license": "MIT",
