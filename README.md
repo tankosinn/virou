@@ -66,6 +66,8 @@ createApp(App)
   .mount('#app')
 ```
 
+> ⚠️ Virou doesn’t globally register any components (including `VRouterView`); it only adds a `$virou` global property to store router instances in a `Map<string, VRouterData>`, which are automatically removed when no longer in use.
+
 ### 🧩 Using with Nuxt
 
 Install Virou Nuxt module with your package manager:
