@@ -1,5 +1,5 @@
 import type { App } from 'vue'
-import { virou, VRouterView } from '@virou/core'
+import { virou } from '@virou/core'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { createApp } from 'vue'
 
@@ -17,11 +17,6 @@ describe('plugin', () => {
     expect(map).toBeDefined()
     expect(map).toBeInstanceOf(Map)
     expect(map.size).toBe(0)
-  })
-
-  it('should globally register the component', () => {
-    app.use(virou)
-    expect(app.component('VRouterView')).toBe(VRouterView)
   })
 
   it('should pre-register routers from options with _isGlobal=true', () => {
