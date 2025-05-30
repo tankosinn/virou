@@ -12,12 +12,12 @@ catalog:
   '@vue/test-utils': 2.4.6
   bumpp: 10.1.1
   defu: ^6.1.4
-  eslint: 9.27.0
-  happy-dom: 17.4.7
+  eslint: 9.28.0
+  happy-dom: 17.5.6
   installed-check: 9.3.0
-  lint-staged: 16.0.0
+  lint-staged: 16.1.0
   nuxt: 3.17.4
-  rou3: ^0.6.1
+  rou3: ^0.6.2
   simple-git-hooks: 2.13.0
   tsx: 4.19.4
   typescript: 5.8.3
