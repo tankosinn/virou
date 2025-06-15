@@ -3,25 +3,25 @@ packages:
   - playgrounds/*
 
 catalog:
-  '@antfu/eslint-config': 4.13.2
-  '@nuxt/kit': ^3.17.4
+  '@antfu/eslint-config': 4.14.1
+  '@nuxt/kit': ^3.17.5
   '@nuxt/module-builder': 1.0.1
-  '@nuxt/schema': 3.17.4
+  '@nuxt/schema': 3.17.5
   '@vitejs/plugin-vue': 5.2.4
-  '@vitest/coverage-v8': 3.1.4
+  '@vitest/coverage-v8': 3.2.3
   '@vue/test-utils': 2.4.6
   bumpp: 10.1.1
   defu: ^6.1.4
-  eslint: 9.27.0
-  happy-dom: 17.4.7
+  eslint: 9.29.0
+  happy-dom: 17.6.3
   installed-check: 9.3.0
-  lint-staged: 16.0.0
-  nuxt: 3.17.4
-  rou3: ^0.6.1
+  lint-staged: 16.1.2
+  nuxt: 3.17.5
+  rou3: ^0.6.3
   simple-git-hooks: 2.13.0
-  tsx: 4.19.4
+  tsx: 4.20.3
   typescript: 5.8.3
   ufo: ^1.6.1
   unbuild: 3.5.0
-  vitest: 3.1.4
+  vitest: 3.2.3
   vue-tsc: 2.2.10
