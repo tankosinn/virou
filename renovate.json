@@ -7,7 +7,7 @@
     ":widenPeerDependencies",
     ":approveMajorUpdates"
   ],
-  "baseBranches": [
+  "baseBranchPatterns": [
     "main"
   ],
   "meteor": {
@@ -19,9 +19,15 @@
   },
   "packageRules": [
     {
-      "matchManagers": ["npm"],
-      "matchDepTypes": ["engines"],
-      "matchPackageNames": ["node"],
+      "matchManagers": [
+        "npm"
+      ],
+      "matchDepTypes": [
+        "engines"
+      ],
+      "matchPackageNames": [
+        "node"
+      ],
       "enabled": false
     }
   ]
