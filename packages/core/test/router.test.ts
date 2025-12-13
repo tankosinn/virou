@@ -27,7 +27,7 @@ describe('router', () => {
 
       expect(route._renderList).toEqual([{ name: 'Home' }])
 
-      expect(routerData._isGlobal).toBe(false)
+      expect(routerData.isGlobal).toBe(false)
       expect(routerData._deps).toBe(0)
     })
   })
@@ -36,10 +36,10 @@ describe('router', () => {
     const routes: VRouteRaw[] = [{ path: '/', component: () => null }]
 
     const routerData = createVRouter(routes, {
-      _isGlobal: true,
+      isGlobal: true,
     })
 
-    expect(routerData._isGlobal).toBe(true)
+    expect(routerData.isGlobal).toBe(true)
     expect(routerData._deps).toBe(0)
   })
 
@@ -178,7 +178,7 @@ describe('router', () => {
       const routes: VRouteRaw[] = [{ path: '/', component: () => null }]
 
       const wrapper = useSetupWithPlugin(() => {
-        useVRouter('temp', routes, { _isGlobal: true })
+        useVRouter('temp', routes, { isGlobal: true })
       })
 
       const virou = wrapper.vm.$virou

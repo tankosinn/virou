@@ -39,7 +39,7 @@ export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VR
     routes: routeRegistry,
     activePath,
     route,
-    _isGlobal: options?._isGlobal ?? false,
+    isGlobal: options?.isGlobal ?? false,
     _deps: 0,
     _dispose: unwatch,
   }
@@ -87,7 +87,7 @@ export function useVRouter(...args: any[]): VRouter {
   onScopeDispose(() => {
     router._deps--
 
-    if (router._deps === 0 && !router._isGlobal) {
+    if (router._deps === 0 && !router.isGlobal) {
       router._dispose()
       virou.delete(key)
     }

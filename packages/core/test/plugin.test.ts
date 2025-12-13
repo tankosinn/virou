@@ -19,7 +19,7 @@ describe('plugin', () => {
     expect(map.size).toBe(0)
   })
 
-  it('should pre-register routers from options with _isGlobal=true', () => {
+  it('should pre-register routers from options with isGlobal=true', () => {
     const routes = [{ path: '/foo', component: { name: 'Foo', render: () => null } }]
 
     app.use(virou, {
@@ -37,7 +37,7 @@ describe('plugin', () => {
     const router = map.get('foo')
 
     expect(router).toBeDefined()
-    expect(router?._isGlobal).toBe(true)
+    expect(router?.isGlobal).toBe(true)
 
     const paths = [...router!.routes.keys()].map(([path]) => path)
     expect(paths).toContain('/foo')

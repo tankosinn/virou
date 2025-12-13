@@ -10,7 +10,7 @@ export const virou: Plugin<[VirouPluginOptions?]> = (app, options = {}) => {
 
   if (routers) {
     for (const [key, router] of Object.entries(routers)) {
-      map.set(key, createVRouter(router.routes, { ...router.options, _isGlobal: true }))
+      map.set(key, createVRouter(router.routes, { ...router.options, isGlobal: true }))
     }
   }
 }

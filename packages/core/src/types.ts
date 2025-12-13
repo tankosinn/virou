@@ -44,14 +44,14 @@ export interface VRouterData {
   routes: VRoutesMap
   activePath: Ref<string>
   route: ShallowRef<VRoute>
-  _isGlobal: boolean
+  isGlobal: boolean
   _deps: number
   _dispose: () => void
 }
 
 export interface VRouterOptions {
   initialPath?: string
-  _isGlobal?: boolean
+  isGlobal?: boolean
 }
 
 export interface VRouter {
@@ -66,6 +66,6 @@ export interface VRouter {
 export interface VirouPluginOptions {
   routers?: Record<string, {
     routes: VRouteRaw[]
-    options?: Omit<VRouterOptions, '_isGlobal'>
+    options?: Omit<VRouterOptions, 'isGlobal'>
   }>
 }

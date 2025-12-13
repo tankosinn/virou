@@ -312,10 +312,10 @@ const { router, route } = useVRouter('embedded-widget-app')
 
 #### Runtime-Registered Globals
 
-You may also mark a router as global at runtime by passing the `_isGlobal` option:
+You may also mark a router as global at runtime by passing the `isGlobal` option:
 
 ```ts
-useVRouter(routes, { _isGlobal: true })
+useVRouter(routes, { isGlobal: true })
 ```
 
 That router will stay registered even after components that use it unmount.
