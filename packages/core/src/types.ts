@@ -36,7 +36,7 @@ export interface VRoute {
   path: string
   search: string
   hash: string
-  _renderList: Component[] | null
+  '~renderList': Component[] | null
 }
 
 export interface VRouterData {
@@ -45,8 +45,8 @@ export interface VRouterData {
   activePath: Ref<string>
   route: ShallowRef<VRoute>
   isGlobal: boolean
-  _deps: number
-  _dispose: () => void
+  '~deps': number
+  '~dispose': () => void
 }
 
 export interface VRouterOptions {
@@ -59,7 +59,7 @@ export interface VRouter {
   router: {
     addRoute: (route: VRouteRaw) => void
     replace: (path: string) => void
-    _depthKey: symbol
+    '~depthKey': symbol
   }
 }
 

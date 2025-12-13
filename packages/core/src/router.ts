@@ -15,7 +15,7 @@ export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VR
 
   const snapshot = (): VRoute => {
     const matchedRoute = findRoute(context, 'GET', activePath.value)
-    const _renderList = matchedRoute ? createRenderList(matchedRoute.data, routeRegistry) : null
+    const renderList = matchedRoute ? createRenderList(matchedRoute.data, routeRegistry) : null
     const { pathname, hash, search } = parseURL(activePath.value)
     return {
       fullPath: activePath.value,
@@ -24,7 +24,7 @@ export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VR
       hash,
       meta: matchedRoute?.data.meta,
       params: matchedRoute?.params,
-      _renderList,
+      '~renderList': renderList,
     }
   }
 
@@ -40,8 +40,8 @@ export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VR
     activePath,
     route,
     isGlobal: options?.isGlobal ?? false,
-    _deps: 0,
-    _dispose: unwatch,
+    '~deps': 0,
+    '~dispose': unwatch,
   }
 }
 
@@ -83,12 +83,12 @@ export function useVRouter(...args: any[]): VRouter {
     throw new Error(`[virou] [useVRouter] router with key "${key}" not found`)
   }
 
-  router._deps++
+  router['~deps']++
   onScopeDispose(() => {
-    router._deps--
+    router['~deps']--
 
-    if (router._deps === 0 && !router.isGlobal) {
-      router._dispose()
+    if (router['~deps'] === 0 && !router.isGlobal) {
+      router['~dispose']()
       virou.delete(key)
     }
   })
@@ -102,7 +102,7 @@ export function useVRouter(...args: any[]): VRouter {
       replace: (path: string) => {
         router.activePath.value = path
       },
-      _depthKey: Symbol.for(key),
+      '~depthKey': Symbol.for(key),
     },
   }
 }

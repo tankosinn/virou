@@ -186,7 +186,7 @@ const { router, route } = useVRouter('my-wizard', routes)
     hash: string
     meta?: Record<PropertyKey, unknown>
     params?: Record<string, string>
-    _renderList: Component[] | null
+    '~renderList': Component[] | null
   }
   ```
 - `router`:

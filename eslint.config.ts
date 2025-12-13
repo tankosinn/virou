@@ -11,4 +11,9 @@ export default antfu({
       'pnpm/yaml-enforce-settings': 'off',
     },
   },
+  stylistic: {
+    overrides: {
+      'style/quote-props': 'off',
+    },
+  },
 })

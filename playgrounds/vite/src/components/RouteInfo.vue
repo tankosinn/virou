@@ -4,9 +4,9 @@ import { computed, inject } from 'vue'
 
 const { router, route } = useVRouter()
 
-const currentDepth = inject(router._depthKey, 1) - 1
+const currentDepth = inject(router['~depthKey'], 1) - 1
 
-const routerDepth = computed(() => (route.value._renderList?.length ?? 0) - 1)
+const routerDepth = computed(() => (route.value['~renderList']?.length ?? 0) - 1)
 </script>
 
 <template>

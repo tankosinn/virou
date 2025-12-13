@@ -30,11 +30,11 @@ export const VRouterView = defineComponent({
 
     const { route, router } = useVRouter(key)
 
-    const depth = inject<number>(router._depthKey, 0)
-    provide(router._depthKey, depth + 1)
+    const depth = inject<number>(router['~depthKey'], 0)
+    provide(router['~depthKey'], depth + 1)
 
     return () => {
-      const component = route.value._renderList?.[depth]
+      const component = route.value['~renderList']?.[depth]
       if (!component) {
         return slots.default?.({ Component: null, route: route.value }) ?? null
       }

@@ -193,7 +193,7 @@ describe('component', () => {
         useVRouter('abc', routes)
         return () => h(VRouterView, {
           routerKey: 'abc',
-          viewKey: (route, key) => `${key}|${route.path}|depth${route._renderList!.length}`,
+          viewKey: (route, key) => `${key}|${route.path}|depth${route['~renderList']!.length}`,
         })
       },
     }))

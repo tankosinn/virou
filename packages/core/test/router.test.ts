@@ -25,10 +25,10 @@ describe('router', () => {
 
       expect(route.meta).toEqual({ foo: 'bar' })
 
-      expect(route._renderList).toEqual([{ name: 'Home' }])
+      expect(route['~renderList']).toEqual([{ name: 'Home' }])
 
       expect(routerData.isGlobal).toBe(false)
-      expect(routerData._deps).toBe(0)
+      expect(routerData['~deps']).toBe(0)
     })
   })
 
@@ -40,7 +40,7 @@ describe('router', () => {
     })
 
     expect(routerData.isGlobal).toBe(true)
-    expect(routerData._deps).toBe(0)
+    expect(routerData['~deps']).toBe(0)
   })
 
   it('should create router with initial path', () => {
