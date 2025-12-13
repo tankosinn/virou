@@ -70,8 +70,8 @@ catalogs:
       specifier: 3.1.4
       version: 3.1.4
     vue-tsc:
-      specifier: 2.2.10
-      version: 2.2.10
+      specifier: 3.1.8
+      version: 3.1.8
 
 importers:
 
@@ -118,7 +118,7 @@ importers:
         version: 3.1.4(@types/debug@4.1.12)(@types/node@22.15.18)(happy-dom@20.0.11)(jiti@2.6.1)(terser@5.39.1)(tsx@4.19.4)(yaml@2.8.2)
       vue-tsc:
         specifier: 'catalog:'
-        version: 2.2.10(typescript@5.8.3)
+        version: 3.1.8(typescript@5.8.3)
 
   packages/core:
     dependencies:
@@ -2115,6 +2115,9 @@ packages:
 
   '@volar/typescript@2.4.13':
     resolution: {integrity: sha512-Ukz4xv84swJPupZeoFsQoeJEOm7U9pqsEnaGGgt5ni3SCTa22m8oJP5Nng3Wed7Uw5RBELdLxxORX8YhJPyOgQ==}
+
+  '@volar/typescript@2.4.26':
+    resolution: {integrity: sha512-N87ecLD48Sp6zV9zID/5yuS1+5foj0DfuYGdQ6KHj/IbKvyKv1zNX6VCmnKYwtmHadEO6mFc2EKISiu3RDPAvA==}
 
   '@voxpelli/semver-set@6.0.0':
     resolution: {integrity: sha512-FC6UgwEA6k2dPK8SslOR0nKAW4fRB3d4shV3Jo9AEdUUdyWp3s8KgJPUJLpjcXz+hb+qaI8PhQcz/UH9oBMbUw==}
@@ -5789,6 +5792,12 @@ packages:
     peerDependencies:
       typescript: '>=5.0.0'
 
+  vue-tsc@3.1.8:
+    resolution: {integrity: sha512-deKgwx6exIHeZwF601P1ktZKNF0bepaSN4jBU3AsbldPx9gylUc1JDxYppl82yxgkAgaz0Y0LCLOi+cXe9HMYA==}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=5.0.0'
+
   vue@3.5.25:
     resolution: {integrity: sha512-YLVdgv2K13WJ6n+kD5owehKtEXwdwXuj2TTyJMsO7pSeKw2bfRNZGjhB7YzrpbMYj5b5QsUebHpOqR3R3ziy/g==}
     peerDependencies:
@@ -7846,18 +7855,27 @@ snapshots:
   '@volar/language-core@2.4.13':
     dependencies:
       '@volar/source-map': 2.4.13
+    optional: true
 
   '@volar/language-core@2.4.26':
     dependencies:
       '@volar/source-map': 2.4.26
 
-  '@volar/source-map@2.4.13': {}
+  '@volar/source-map@2.4.13':
+    optional: true
 
   '@volar/source-map@2.4.26': {}
 
   '@volar/typescript@2.4.13':
     dependencies:
       '@volar/language-core': 2.4.13
+      path-browserify: 1.0.1
+      vscode-uri: 3.1.0
+    optional: true
+
+  '@volar/typescript@2.4.26':
+    dependencies:
+      '@volar/language-core': 2.4.26
       path-browserify: 1.0.1
       vscode-uri: 3.1.0
 
@@ -7944,6 +7962,7 @@ snapshots:
     dependencies:
       de-indent: 1.0.2
       he: 1.2.0
+    optional: true
 
   '@vue/devtools-api@6.6.4': {}
 
@@ -7975,7 +7994,7 @@ snapshots:
 
   '@vue/language-core@2.2.10(typescript@5.8.3)':
     dependencies:
-      '@volar/language-core': 2.4.13
+      '@volar/language-core': 2.4.26
       '@vue/compiler-dom': 3.5.25
       '@vue/compiler-vue2': 2.7.16
       '@vue/shared': 3.5.25
@@ -7985,6 +8004,7 @@ snapshots:
       path-browserify: 1.0.1
     optionalDependencies:
       typescript: 5.8.3
+    optional: true
 
   '@vue/language-core@3.1.8(typescript@5.8.3)':
     dependencies:
@@ -8106,7 +8126,8 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  alien-signals@1.0.13: {}
+  alien-signals@1.0.13:
+    optional: true
 
   alien-signals@3.1.1: {}
 
@@ -8631,7 +8652,8 @@ snapshots:
 
   db0@0.3.4: {}
 
-  de-indent@1.0.2: {}
+  de-indent@1.0.2:
+    optional: true
 
   debug@4.4.1:
     dependencies:
@@ -9465,7 +9487,8 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
 
-  he@1.2.0: {}
+  he@1.2.0:
+    optional: true
 
   hookable@5.5.3: {}
 
@@ -12320,6 +12343,13 @@ snapshots:
     dependencies:
       '@volar/typescript': 2.4.13
       '@vue/language-core': 2.2.10(typescript@5.8.3)
+      typescript: 5.8.3
+    optional: true
+
+  vue-tsc@3.1.8(typescript@5.8.3):
+    dependencies:
+      '@volar/typescript': 2.4.26
+      '@vue/language-core': 3.1.8(typescript@5.8.3)
       typescript: 5.8.3
 
   vue@3.5.25(typescript@5.8.3):
