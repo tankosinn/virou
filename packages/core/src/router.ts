@@ -62,7 +62,7 @@ export function useVRouter(...args: any[]): VRouter {
 
   const vm = getCurrentInstance()
   if (!vm) {
-    throw new TypeError('[virou] [useVRouter] useVRouter must be called in setup()')
+    throw new Error('[virou] [useVRouter] useVRouter must be called in setup()')
   }
 
   const virou = vm.proxy?.$virou
