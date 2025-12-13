@@ -24,4 +24,4 @@ catalog:
   ufo: ^1.6.1
   unbuild: 3.5.0
   vitest: 3.1.4
-  vue-tsc: 2.2.10
+  vue-tsc: 3.1.8
