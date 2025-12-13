@@ -1,7 +1,7 @@
 {
   "name": "@virou/nuxt",
   "type": "module",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Virou Nuxt Module",
   "author": "Tankosin<https://github.com/tankosinn>",
   "license": "MIT",
