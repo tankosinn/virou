@@ -22,16 +22,16 @@
   ],
   "sideEffects": false,
   "exports": {
-    "types": "./dist/index.d.mts",
-    "default": "./dist/index.mjs"
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
   },
-  "main": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "unbuild"
+    "build": "pnpm -w tsdown -F @virou/core"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
@@ -39,8 +39,5 @@
   "dependencies": {
     "rou3": "catalog:",
     "ufo": "catalog:"
-  },
-  "devDependencies": {
-    "unbuild": "catalog:"
   }
 }

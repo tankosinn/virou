@@ -25,10 +25,11 @@
   ],
   "sideEffects": false,
   "exports": {
-    "types": "./dist/types.d.mts",
-    "default": "./dist/module.mjs"
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
   },
-  "main": "./dist/module.mjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -36,7 +37,7 @@
     "node": ">=18.12.0"
   },
   "scripts": {
-    "build": "nuxt-module-build build"
+    "build": "pnpm -w tsdown -F @virou/nuxt"
   },
   "dependencies": {
     "@nuxt/kit": "catalog:",
@@ -44,7 +45,6 @@
     "defu": "catalog:"
   },
   "devDependencies": {
-    "@nuxt/module-builder": "catalog:",
     "@nuxt/schema": "catalog:",
     "nuxt": "catalog:"
   }

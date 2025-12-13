@@ -1,6 +1,10 @@
 import type { VirouPluginOptions } from '@virou/core'
-import { addComponent, addImports, addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { addComponent, addImports, defineNuxtModule } from '@nuxt/kit'
 import { defu } from 'defu'
+
+const _dirname = dirname(fileURLToPath(import.meta.url))
 
 const functions = [
   'useVRouter',
@@ -18,11 +22,12 @@ export default defineNuxtModule<ModuleOptions>({
     configKey: 'virou',
   },
   setup(options, nuxt) {
-    const resolver = createResolver(import.meta.url)
-
     nuxt.options.runtimeConfig.public.virou = defu(nuxt.options.runtimeConfig.public.virou, options)
 
-    addPlugin(resolver.resolve('./runtime/plugin'))
+    const pluginPath = resolve(_dirname, './plugin.mjs')
+    nuxt.options.plugins = nuxt.options.plugins ?? []
+    nuxt.options.plugins.push(pluginPath)
+    nuxt.options.build.transpile.push(pluginPath)
 
     functions.forEach((name) => {
       addImports({ name, as: name, from: '@virou/core', priority: -1 })

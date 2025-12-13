@@ -5,5 +5,3 @@ declare module 'vue' {
     $virou: Map<string, VRouterData>
   }
 }
-
-export {}

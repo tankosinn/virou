@@ -19,6 +19,7 @@ dist
 # VSCode
 .vscode/*
 !.vscode/settings.json
+!.vscode/extensions.json
 
 # Intellij idea
 *.iml

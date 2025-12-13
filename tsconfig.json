@@ -2,23 +2,18 @@
   "compilerOptions": {
     "target": "ESNext",
     "baseUrl": ".",
-    "module": "Preserve",
+    "rootDir": ".",
+    "module": "ESNext",
     "moduleResolution": "Bundler",
     "paths": {
       "@virou/core": ["packages/core/src/index.ts"],
       "@virou/core/*": ["packages/core/src/*"]
     },
-    "resolveJsonModule": true,
-    "allowJs": true,
-    "checkJs": true,
     "strict": true,
-    "noImplicitOverride": true,
     "noEmit": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
     "skipLibCheck": true
   },
   "exclude": [

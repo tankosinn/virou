@@ -1,3 +1,4 @@
+/* eslint-disable ts/explicit-function-return-type */
 import type { ComponentMountingOptions } from '@vue/test-utils'
 import { virou } from '@virou/core'
 import { mount } from '@vue/test-utils'

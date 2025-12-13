@@ -8,7 +8,7 @@
   "author": "Tankosin<https://github.com/tankosinn>",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm --filter \"./packages/**\" build",
+    "build": "tsdown",
     "dev": "pnpm play",
     "dev:prepare": "pnpm build",
     "lint": "eslint --cache .",
@@ -18,9 +18,10 @@
     "play": "pnpm --filter './playgrounds/vite' dev",
     "play:build": "pnpm --filter './playgrounds/vite' build",
     "play:preview": "pnpm --filter './playgrounds/vite' preview",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
-    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "test:cov": "vitest run --coverage",
+    "test:unit": "vitest run --project unit",
+    "typecheck": "vue-tsc",
     "prepare": "simple-git-hooks"
   },
   "devDependencies": {
@@ -34,6 +35,7 @@
     "installed-check": "catalog:",
     "lint-staged": "catalog:",
     "simple-git-hooks": "catalog:",
+    "tsdown": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
@@ -43,6 +45,6 @@
     "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
-    "*": "pnpm lint:fix"
+    "*.{js,ts,tsx,vue,md,json}": ["eslint --cache --fix"]
   }
 }

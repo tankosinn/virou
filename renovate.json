@@ -17,18 +17,5 @@
   "npm": {
     "commitMessageTopic": "{{prettyDepType}} {{depName}}"
   },
-  "packageRules": [
-    {
-      "matchManagers": [
-        "npm"
-      ],
-      "matchDepTypes": [
-        "engines"
-      ],
-      "matchPackageNames": [
-        "node"
-      ],
-      "enabled": false
-    }
-  ]
+  "ignoreDeps": ["node"]
 }

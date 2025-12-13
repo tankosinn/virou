@@ -13,7 +13,7 @@ export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VR
 
   const activePath = ref(options?.initialPath ?? '/')
 
-  const snapshot = () => {
+  const snapshot = (): VRoute => {
     const matchedRoute = findRoute(context, 'GET', activePath.value)
     const _renderList = matchedRoute ? createRenderList(matchedRoute.data, routeRegistry) : null
     const { pathname, hash, search } = parseURL(activePath.value)

@@ -11,14 +11,17 @@ export default defineConfig({
   },
   test: {
     coverage: {
+      include: [
+        'packages/**/*.ts',
+      ],
       exclude: [
-        'playgrounds/**',
-        'scripts/**',
-        '**/dist/**',
+        'packages/nuxt/**',
+        '**/*.config.ts',
+        '**/test/**',
         ...coverageConfigDefaults.exclude,
       ],
     },
-    workspace: [
+    projects: [
       {
         extends: true,
         test: {
