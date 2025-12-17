@@ -13,7 +13,7 @@ catalog:
   '@nuxt/kit': ^4.2.2
   '@nuxt/schema': 4.2.2
   '@vitejs/plugin-vue': 6.0.3
-  '@vitest/coverage-v8': 4.0.15
+  '@vitest/coverage-v8': 4.0.16
   '@vue/test-utils': 2.4.6
   bumpp: 10.3.2
   defu: ^6.1.4
@@ -22,16 +22,16 @@ catalog:
   installed-check: 9.3.0
   lint-staged: 16.2.7
   nuxt: 4.2.2
-  rou3: ^0.7.11
+  rou3: ^0.7.12
   simple-git-hooks: 2.13.1
-  tsdown: 0.17.4
+  tsdown: 0.18.0
   tsx: 4.21.0
   typescript: 5.9.3
   ufo: ^1.6.1
-  vite: 7.2.7
-  vitest: 4.0.15
+  vite: 7.3.0
+  vitest: 4.0.16
   vue: ^3.5.25
-  vue-shiki-input: ^2.0.1
+  vue-shiki-input: ^2.1.0
   vue-tsc: 3.1.8
 
 strictPeerDependencies: false
