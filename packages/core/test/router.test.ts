@@ -2,10 +2,23 @@ import type { VRouteId, VRouteMatchedData, VRouteNormalized, VRouteRaw, VRoutesM
 import type { Component } from 'vue'
 import { createVRouter } from '@virou/core'
 import { createRouter, findRoute } from 'rou3'
-import { describe, expect, it } from 'vitest'
+import * as rou3 from 'rou3'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineAsyncComponent } from 'vue'
 import { registerRoutes } from '../src/router/register'
 import { createRenderList } from '../src/router/render'
+
+vi.mock('rou3', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('rou3')>()
+  return {
+    ...actual,
+    addRoute: vi.fn(actual.addRoute),
+  }
+})
+
+afterEach(() => {
+  vi.clearAllMocks()
+})
 
 function getRouteEntry(registry: VRoutesMap, path: string, depth: number): [VRouteId, VRouteNormalized] {
   const routeEntry = Array.from(registry.entries()).find(
@@ -163,6 +176,42 @@ describe('router:register', () => {
 
     expect(match!.data.id).toEqual(['/parent', 1])
     expect(match!.data.meta).toEqual({ foo: 'baz' })
+  })
+
+  it('should avoid registering shadowed parent path in rou3', () => {
+    const ctx = createRouter<VRouteMatchedData>()
+    const registry = new Map<VRouteId, VRouteNormalized>()
+
+    const addRouteMock = vi.mocked(rou3.addRoute)
+
+    const routes: VRouteRaw[] = [
+      {
+        path: '/parent',
+        component: () => null,
+        meta: { parent: true },
+        children: [
+          {
+            path: '',
+            component: () => null,
+            meta: { child: true },
+          },
+        ],
+      },
+    ]
+
+    registerRoutes(ctx, routes, registry)
+
+    expect(addRouteMock).toHaveBeenCalledTimes(1)
+    expect(addRouteMock).toHaveBeenCalledWith(
+      ctx,
+      'GET',
+      '/parent',
+      expect.objectContaining({ id: ['/parent', 1], meta: { child: true } }),
+    )
+
+    const match = findRoute(ctx, 'GET', '/parent')
+    expect(match?.data.id).toEqual(['/parent', 1])
+    expect(match?.data.meta).toEqual({ child: true })
   })
 
   it('should normalize components', async () => {

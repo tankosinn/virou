@@ -4,16 +4,28 @@ import { addRoute } from 'rou3'
 import { joinURL } from 'ufo'
 import { normalizeComponent } from '../utils'
 
+interface StackItem {
+  route: VRouteRaw
+  parentId?: VRouteId
+}
+
 export function registerRoutes(
   ctx: RouterContext<VRouteMatchedData>,
   routes: VRouteRaw[],
   registry: VRoutesMap,
-  parentId?: VRouteId,
 ): void {
-  for (const { path, meta, component, children } of routes) {
-    const fullPath = joinURL(parentId?.[0] ?? '/', path)
-    const depth = (parentId?.[1] ?? -1) + 1
+  const stack: StackItem[] = []
+  for (let i = routes.length - 1; i >= 0; i--) {
+    stack.push({ route: routes[i] })
+  }
 
+  while (stack.length > 0) {
+    const { route, parentId } = stack.pop()!
+    const { path, meta, component, children } = route
+
+    const parentPath = parentId?.[0] ?? '/'
+    const fullPath = joinURL(parentPath, path)
+    const depth = (parentId?.[1] ?? -1) + 1
     const id: VRouteId = Object.freeze([fullPath, depth])
 
     registry.set(id, {
@@ -22,10 +34,17 @@ export function registerRoutes(
       parentId,
     })
 
-    if (children && children.length) {
-      registerRoutes(ctx, children, registry, id)
+    let isShadowed = false
+    if (children && children.length > 0) {
+      isShadowed = children.some(c => c.path === '' || c.path === '/')
+
+      for (let i = children.length - 1; i >= 0; i--) {
+        stack.push({ route: children[i], parentId: id })
+      }
     }
 
-    addRoute(ctx, 'GET', fullPath, { id, meta })
+    if (!isShadowed) {
+      addRoute(ctx, 'GET', fullPath, { id, meta })
+    }
   }
 }
