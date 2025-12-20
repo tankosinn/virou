@@ -1,35 +1,45 @@
-import type { VRoute, VRouteRaw } from '@virou/core'
-import { createVRouter, useVRouter, virou } from '@virou/core'
-import { mount } from '@vue/test-utils'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
-import { useSetup, useSetupWithPlugin } from './_utils'
+import type { VRouteId, VRouteMatchedData, VRouteNormalized, VRouteRaw, VRoutesMap } from '@virou/core'
+import type { Component } from 'vue'
+import { createVRouter } from '@virou/core'
+import { createRouter, findRoute } from 'rou3'
+import { describe, expect, it } from 'vitest'
+import { defineAsyncComponent } from 'vue'
+import { registerRoutes } from '../src/router/register'
+import { createRenderList } from '../src/router/render'
 
-describe('router', () => {
-  describe('createVRouter', () => {
-    it('should create router', () => {
-      const routes: VRouteRaw[] = [{ path: '/', component: { name: 'Home' }, meta: { foo: 'bar' } }]
+function getRouteEntry(registry: VRoutesMap, path: string, depth: number): [VRouteId, VRouteNormalized] {
+  const routeEntry = Array.from(registry.entries()).find(
+    ([id]) => id[0] === path && id[1] === depth,
+  )
+  if (!routeEntry) {
+    throw new Error(`Route not found: ${path} at depth ${depth}`)
+  }
+  return routeEntry
+}
 
-      const routerData = createVRouter(routes)
+describe('router:create', () => {
+  it('should create router', () => {
+    const routes: VRouteRaw[] = [{ path: '/', component: { name: 'Home' }, meta: { foo: 'bar' } }]
 
-      expect(routerData.routes.size).toBe(1)
-      expect(routerData.activePath.value).toBe('/')
+    const routerData = createVRouter(routes)
 
-      const route = routerData.route.value
+    expect(routerData.routes.size).toBe(1)
+    expect(routerData.activePath.value).toBe('/')
 
-      expect(route.path).toBe('/')
-      expect(route.fullPath).toBe('/')
-      expect(route.params).toBeUndefined()
-      expect(route.search).toBe('')
-      expect(route.hash).toBe('')
+    const route = routerData.route.value
 
-      expect(route.meta).toEqual({ foo: 'bar' })
+    expect(route.path).toBe('/')
+    expect(route.fullPath).toBe('/')
+    expect(route.params).toBeUndefined()
+    expect(route.search).toBe('')
+    expect(route.hash).toBe('')
 
-      expect(route['~renderList']).toEqual([{ name: 'Home' }])
+    expect(route.meta).toEqual({ foo: 'bar' })
 
-      expect(routerData.isGlobal).toBe(false)
-      expect(routerData['~deps']).toBe(0)
-    })
+    expect(route['~renderList']).toEqual([{ name: 'Home' }])
+
+    expect(routerData.isGlobal).toBe(false)
+    expect(routerData['~deps']).toBe(0)
   })
 
   it('should create global router', () => {
@@ -68,151 +78,194 @@ describe('router', () => {
     expect(route.path).toBe('/about')
     expect(route.fullPath).toBe('/about')
   })
+})
 
-  describe('useVRouter', () => {
-    afterEach(() => {
-      vi.resetModules()
-      vi.clearAllMocks()
-    })
+describe('router:register', () => {
+  it('should register a top-level route', () => {
+    const ctx = createRouter<VRouteMatchedData>()
+    const registry = new Map<VRouteId, VRouteNormalized>()
 
-    it('should throw error when plugin is not installed', () => {
-      expect(() => useSetup(() => useVRouter())).toThrowError('[virou] [useVRouter] virou plugin not installed')
-    })
+    const Home: Component = { name: 'Home', render: () => null }
+    const routes: VRouteRaw[] = [{
+      path: '/',
+      component: Home,
+      meta: { title: 'Home' },
+    }]
 
-    it('should throw error when key is not a non-empty string', () => {
-      expect(() => useSetupWithPlugin(() => useVRouter(''))).toThrowError('[virou] [useVRouter] key must be a string: ')
-    })
+    registerRoutes(ctx, routes, registry)
 
-    it('should throw error when useVRouter is not called in setup()', () => {
-      expect(() => useVRouter('foo')).toThrowError('[virou] [useVRouter] useVRouter must be called in setup()')
-    })
+    expect(registry.size).toBe(1)
 
-    it('should throw error when router with key already exists', () => {
-      const routes: VRouteRaw[] = [{ path: '/', component: () => null }]
+    const [id, route] = getRouteEntry(registry, '/', 0)
+    expect(Object.isFrozen(id)).toBe(true)
+    expect(id).toEqual(['/', 0])
+    expect(route.component).toBe(Home)
+    expect(route.meta).toEqual({ title: 'Home' })
+    expect(route.parentId).toBeUndefined()
 
-      expect(() => useSetupWithPlugin(() => {
-        useVRouter('foo', routes)
-        useVRouter('foo', routes)
-      })).toThrowError('[virou] [useVRouter] router with key "foo" already exists')
-    })
+    const match = findRoute(ctx, 'GET', '/')
+    expect(match).toBeDefined()
+    expect(match?.data.id).toEqual(id)
+  })
 
-    it('should throw error when router with key does not exist', () => {
-      expect(() => useSetupWithPlugin(() => useVRouter('foo'))).toThrowError('[virou] [useVRouter] router with key "foo" not found')
-    })
+  it('should handle nested routes', () => {
+    const ctx = createRouter<VRouteMatchedData>()
+    const registry = new Map<VRouteId, VRouteNormalized>()
 
-    it('should create router with key', () => {
-      const routes: VRouteRaw[] = [{ path: '/', component: () => null }]
+    const Parent: Component = { name: 'Parent', render: () => null }
+    const Child: Component = { name: 'Child', render: () => null }
+    const Grandchild: Component = { name: 'Grandchild', render: () => null }
 
-      const wrapper = useSetupWithPlugin(() => {
-        useVRouter('foo', routes)
-      })
+    const routes: VRouteRaw[] = [
+      {
+        path: '/parent',
+        component: Parent,
+        children: [
+          { path: '', component: Child, meta: { depth: 1 } },
+          { path: 'grand', component: Grandchild },
+        ],
+      },
+    ]
 
-      const virou = wrapper.vm.$virou
+    registerRoutes(ctx, routes, registry)
 
-      expect(virou.has('foo')).toBe(true)
-    })
+    expect(registry.size).toBe(3)
+    const [, dataChild] = getRouteEntry(registry, '/parent', 1)
+    expect(dataChild.meta).toEqual({ depth: 1 })
+    expect(dataChild.parentId).toEqual(['/parent', 0])
 
-    it('should create router without key', () => {
-      const routes: VRouteRaw[] = [{ path: '/', component: () => null }]
+    const [, dataGrand] = getRouteEntry(registry, '/parent/grand', 1)
+    expect(dataGrand.parentId).toEqual(['/parent', 0])
 
-      vi.mock(import('vue'), async (importOriginal) => {
-        const actual = await importOriginal()
-        return {
-          ...actual,
-          useId: () => 'foo',
-        }
-      })
+    expect(findRoute(ctx, 'GET', '/parent')?.data.id).toEqual(['/parent', 1])
+    expect(findRoute(ctx, 'GET', '/parent/grand')?.data.id).toEqual(['/parent/grand', 1])
+  })
 
-      const wrapper = useSetupWithPlugin(() => {
-        useVRouter(routes)
-      })
+  it('should let default-child override parent when matching', () => {
+    const ctx = createRouter<VRouteMatchedData>()
+    const registry = new Map<VRouteId, VRouteNormalized>()
 
-      const virou = wrapper.vm.$virou
+    const routes: VRouteRaw[] = [
+      {
+        path: '/parent',
+        component: () => null,
+        meta: { foo: 'bar' },
+        children: [
+          { path: '', component: () => null, meta: { foo: 'baz' } },
+        ],
+      },
+    ]
 
-      expect(virou.has('foo')).toBe(true)
-    })
+    registerRoutes(ctx, routes, registry)
 
-    it('should add route', () => {
-      const routes: VRouteRaw[] = [{ path: '/', component: () => null }]
+    const match = findRoute(ctx, 'GET', '/parent')
+    expect(match).toBeDefined()
 
-      const wrapper = useSetupWithPlugin(() => {
-        const { router } = useVRouter('foo', routes)
+    expect(match!.data.id).toEqual(['/parent', 1])
+    expect(match!.data.meta).toEqual({ foo: 'baz' })
+  })
 
-        router.addRoute({ path: '/about', component: () => null })
-      })
+  it('should normalize components', async () => {
+    const ctx = createRouter<VRouteMatchedData>()
+    const registry = new Map<VRouteId, VRouteNormalized>()
 
-      const router = wrapper.vm.$virou.get('foo')
+    const StaticComponent: Component = { name: 'Static', render: () => null }
+    const AsyncComponent: Component = defineAsyncComponent(async () => ({ name: 'Async', render: () => null }))
+    const LazyComponent: Component = async () => Promise.resolve({ name: 'Lazy', render: () => null })
 
-      expect(router?.routes.size).toBe(2)
-    })
+    const routes: VRouteRaw[] = [
+      { path: '/static', component: StaticComponent },
+      { path: '/async', component: AsyncComponent },
+      { path: '/lazy', component: LazyComponent },
+    ]
 
-    it('should replace active path', () => {
-      const routes: VRouteRaw[] = [{ path: '/', component: () => null }]
+    registerRoutes(ctx, routes, registry)
 
-      const wrapper = useSetupWithPlugin(() => {
-        const { router } = useVRouter('foo', routes)
+    const [, dataStatic] = getRouteEntry(registry, '/static', 0)
+    expect(dataStatic.component).toBe(StaticComponent)
 
-        router.replace('/about')
-      })
+    const [, dataAsync] = getRouteEntry(registry, '/async', 0)
+    expect(dataAsync.component).toBe(AsyncComponent)
 
-      const router = wrapper.vm.$virou.get('foo')
+    const [, dataLazy] = getRouteEntry(registry, '/lazy', 0)
+    expect(dataLazy.component).not.toBe(LazyComponent)
+    // @ts-expect-error internal loader
+    expect(typeof dataLazy.component.__asyncLoader).toBe('function')
+  })
+})
 
-      expect(router?.activePath.value).toBe('/about')
-    })
+describe('router:render', () => {
+  it('should create the render list in parent-to-child order', () => {
+    const ctx = createRouter<VRouteMatchedData>()
+    const registry = new Map<VRouteId, VRouteNormalized>()
 
-    it('should dispose a non-global router after have no dependency', () => {
-      const routes: VRouteRaw[] = [{ path: '/', component: () => null }]
+    const A: Component = { name: 'A', render: () => null }
+    const B: Component = { name: 'B', render: () => null }
+    const C: Component = { name: 'C', render: () => null }
 
-      const wrapper = useSetupWithPlugin(() => {
-        useVRouter('temp', routes)
-      })
+    const routes: VRouteRaw[] = [
+      {
+        path: '/a',
+        component: A,
+        children: [
+          {
+            path: 'b',
+            component: B,
+            children: [
+              { path: 'c', component: C },
+            ],
+          },
+        ],
+      },
+    ]
 
-      const virou = wrapper.vm.$virou
-      expect(virou.has('temp')).toBe(true)
+    registerRoutes(ctx, routes, registry)
+    const match = findRoute(ctx, 'GET', '/a/b/c')!
+    const list = createRenderList(match.data, registry)
+    expect(list.map(c => c.name)).toEqual(['A', 'B', 'C'])
+  })
 
-      wrapper.unmount()
-      expect(virou.has('temp')).toBe(false)
-    })
+  it('should place default-child at the correct position', () => {
+    const ctx = createRouter<VRouteMatchedData>()
+    const registry = new Map<VRouteId, VRouteNormalized>()
 
-    it('should not dispose a global router after have no dependency', () => {
-      const routes: VRouteRaw[] = [{ path: '/', component: () => null }]
+    const Parent: Component = { name: 'Parent', render: () => null }
+    const Child: Component = { name: 'Child', render: () => null }
 
-      const wrapper = useSetupWithPlugin(() => {
-        useVRouter('temp', routes, { isGlobal: true })
-      })
+    const routes: VRouteRaw[] = [
+      {
+        path: '/parent',
+        component: Parent,
+        children: [
+          { path: '', component: Child },
+        ],
+      },
+    ]
 
-      const virou = wrapper.vm.$virou
-      expect(virou.has('temp')).toBe(true)
+    registerRoutes(ctx, routes, registry)
+    const match = findRoute(ctx, 'GET', '/parent')!
+    const list = createRenderList(match.data, registry)
+    expect(list.map(c => c.name)).toEqual(['Parent', 'Child'])
+  })
 
-      wrapper.unmount()
-      expect(virou.has('temp')).toBe(true)
-    })
+  it('should return the same array instance on repeated calls (cache)', () => {
+    const ctx = createRouter<VRouteMatchedData>()
+    const registry = new Map<VRouteId, VRouteNormalized>()
 
-    it('should inject router key from parent component to child component router', () => {
-      const routes: VRouteRaw[] = [{ path: '/shared', component: () => null }]
+    const A: Component = { name: 'A', render: () => null }
+    const routes: VRouteRaw[] = [{ path: '/a', component: A }]
+    registerRoutes(ctx, routes, registry)
 
-      let childRoute: VRoute = {} as VRoute
-      let parentRoute: VRoute = {} as VRoute
+    const match = findRoute(ctx, 'GET', '/a')!
+    const first = createRenderList(match.data, registry)
+    const second = createRenderList(match.data, registry)
+    expect(second).toBe(first)
+  })
 
-      const Child = defineComponent({
-        setup() {
-          const { route } = useVRouter()
-          childRoute = route.value
-          return () => null
-        },
-      })
-
-      const Parent = defineComponent({
-        components: { Child },
-        setup() {
-          const { route } = useVRouter('shared', routes, { initialPath: '/shared' })
-          parentRoute = route.value
-          return () => h(Child)
-        },
-      })
-
-      expect(() => mount(Parent, { global: { plugins: [virou] } })).not.toThrowError()
-      expect(childRoute).toBe(parentRoute)
-    })
+  it('should return an empty array for a non-matched route', () => {
+    const registry = new Map<VRouteId, VRouteNormalized>()
+    const fakeData = { id: ['/', 0] as const, meta: {}, params: undefined }
+    const list = createRenderList(fakeData as VRouteMatchedData, registry)
+    expect(list).toEqual([])
   })
 })

@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineAsyncComponent, defineComponent, h, KeepAlive, nextTick, onMounted, ref } from 'vue'
 import { mountWithPlugin } from './_utils'
 
-describe('component', () => {
+describe('components:VRouterView', () => {
   afterEach(() => {
     vi.clearAllTimers()
     vi.useRealTimers()

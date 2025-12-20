@@ -1,49 +1,7 @@
-import type { VRoute, VRouteMatchedData, VRouter, VRouteRaw, VRouterData, VRouterOptions, VRoutesMap } from './types'
-import { createRouter, findRoute } from 'rou3'
-import { parseURL } from 'ufo'
-import { getCurrentInstance, inject, onScopeDispose, provide, ref, shallowRef, useId, watchEffect } from 'vue'
-import { createRenderList, registerRoutes } from './utils'
-
-export const virouSymbol = Symbol('virou')
-
-export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VRouterData {
-  const context = createRouter<VRouteMatchedData>()
-  const routeRegistry: VRoutesMap = new Map()
-  registerRoutes(context, routes, routeRegistry)
-
-  const activePath = ref(options?.initialPath ?? '/')
-
-  const snapshot = (): VRoute => {
-    const matchedRoute = findRoute(context, 'GET', activePath.value)
-    const renderList = matchedRoute ? createRenderList(matchedRoute.data, routeRegistry) : null
-    const { pathname, hash, search } = parseURL(activePath.value)
-    return {
-      fullPath: activePath.value,
-      path: pathname,
-      search,
-      hash,
-      meta: matchedRoute?.data.meta,
-      params: matchedRoute?.params,
-      '~renderList': renderList,
-    }
-  }
-
-  const route = shallowRef<VRoute>(snapshot())
-
-  const unwatch = watchEffect(() => {
-    route.value = snapshot()
-  })
-
-  return {
-    context,
-    routes: routeRegistry,
-    activePath,
-    route,
-    isGlobal: options?.isGlobal ?? false,
-    '~deps': 0,
-    '~dispose': unwatch,
-  }
-}
+import type { VRouter, VRouteRaw, VRouterOptions } from '../types'
+import { getCurrentInstance, inject, onScopeDispose, provide, useId } from 'vue'
+import { virouSymbol } from '../constants'
+import { createVRouter, registerRoutes } from '../router'
 
 export function useVRouter(routes?: VRouteRaw[], options?: VRouterOptions): VRouter
 export function useVRouter(key?: string, routes?: VRouteRaw[], options?: VRouterOptions): VRouter

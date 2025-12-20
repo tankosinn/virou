@@ -1,5 +1,5 @@
 import type { PropType, SlotsType, VNodeChild } from 'vue'
-import type { VRoute } from './types'
+import type { VRoute } from '../types'
 import {
   defineComponent,
   h,
@@ -8,7 +8,8 @@ import {
   provide,
   Suspense,
 } from 'vue'
-import { useVRouter, virouSymbol } from './router'
+import { useVRouter } from '../composables'
+import { virouSymbol } from '../constants'
 
 export const VRouterView = defineComponent({
   name: 'VRouterView',
