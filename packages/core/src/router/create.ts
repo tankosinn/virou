@@ -1,21 +1,45 @@
-import type { VRoute, VRouteMatchedData, VRouteRaw, VRouterData, VRouterOptions, VRoutesMap } from '../types'
+import type {
+  VRoute,
+  VRouteId,
+  VRouteMatchedData,
+  VRouteRaw,
+  VRouterData,
+  VRouteRenderComponent,
+  VRouterOptions,
+  VRoutesMap,
+} from '../types'
 import { createRouter, findRoute } from 'rou3'
 import { parseURL } from 'ufo'
-import { ref, shallowRef, watchEffect } from 'vue'
+import { shallowRef, watchEffect } from 'vue'
 import { registerRoutes } from './register'
 import { createRenderList } from './render'
 
 export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VRouterData {
   const context = createRouter<VRouteMatchedData>()
   const routeRegistry: VRoutesMap = new Map()
+
   registerRoutes(context, routes, routeRegistry)
 
-  const activePath = ref(options?.initialPath ?? '/')
+  let lastMatchedId: VRouteId | undefined
+  let lastRenderList: VRouteRenderComponent[] | null = null
+
+  const activePath = shallowRef(options?.initialPath ?? '/')
 
   const snapshot = (): VRoute => {
     const matchedRoute = findRoute(context, 'GET', activePath.value)
-    const renderList = matchedRoute ? createRenderList(matchedRoute.data, routeRegistry) : null
+    if (matchedRoute) {
+      if (matchedRoute.data.id !== lastMatchedId) {
+        lastRenderList = createRenderList(matchedRoute.data, routeRegistry)
+        lastMatchedId = matchedRoute.data.id
+      }
+    }
+    else {
+      lastMatchedId = undefined
+      lastRenderList = null
+    }
+
     const { pathname, hash, search } = parseURL(activePath.value)
+
     return {
       fullPath: activePath.value,
       path: pathname,
@@ -23,7 +47,7 @@ export function createVRouter(routes: VRouteRaw[], options?: VRouterOptions): VR
       hash,
       meta: matchedRoute?.data.meta,
       params: matchedRoute?.params,
-      '~renderList': renderList,
+      '~renderList': lastRenderList,
     }
   }
 

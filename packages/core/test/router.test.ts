@@ -4,9 +4,10 @@ import { createVRouter } from '@virou/core'
 import { createRouter, findRoute } from 'rou3'
 import * as rou3 from 'rou3'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { defineAsyncComponent } from 'vue'
+import { defineAsyncComponent, nextTick } from 'vue'
 import { registerRoutes } from '../src/router/register'
 import { createRenderList } from '../src/router/render'
+import * as render from '../src/router/render'
 
 vi.mock('rou3', async (importOriginal) => {
   const actual = await importOriginal<typeof import('rou3')>()
@@ -90,6 +91,45 @@ describe('router:create', () => {
 
     expect(route.path).toBe('/about')
     expect(route.fullPath).toBe('/about')
+  })
+
+  it('should reuse render list when route id stays the same (params/query/hash changes)', async () => {
+    const routes: VRouteRaw[] = [
+      { path: '/users/:id', component: { name: 'User', render: () => null } },
+    ]
+
+    const renderSpy = vi.spyOn(render, 'createRenderList')
+
+    const routerData = createVRouter(routes, { initialPath: '/users/1?foo=bar#one' })
+    const initialRenderList = routerData.route.value['~renderList']
+
+    renderSpy.mockClear()
+
+    routerData.activePath.value = '/users/2?foo=baz#two'
+    await nextTick()
+
+    expect(renderSpy).not.toHaveBeenCalled()
+    expect(routerData.route.value['~renderList']).toBe(initialRenderList)
+  })
+
+  it('should recreate render list when route id changes', async () => {
+    const routes: VRouteRaw[] = [
+      { path: '/', component: { name: 'Home', render: () => null } },
+      { path: '/about', component: { name: 'About', render: () => null } },
+    ]
+
+    const renderSpy = vi.spyOn(render, 'createRenderList')
+
+    const routerData = createVRouter(routes, { initialPath: '/' })
+    const initialRenderList = routerData.route.value['~renderList']
+
+    renderSpy.mockClear()
+
+    routerData.activePath.value = '/about'
+    await nextTick()
+
+    expect(renderSpy).toHaveBeenCalledTimes(1)
+    expect(routerData.route.value['~renderList']).not.toBe(initialRenderList)
   })
 })
 
