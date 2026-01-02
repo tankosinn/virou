@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.1.2",
   "private": true,
-  "packageManager": "pnpm@10.26.2",
+  "packageManager": "pnpm@10.27.0",
   "description": "Virtual router with multiple instance support for Vue",
   "author": "Tankosin<https://github.com/tankosinn>",
   "license": "MIT",
