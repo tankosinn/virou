@@ -24,7 +24,7 @@ catalog:
   nuxt: 4.2.2
   rou3: ^0.7.12
   simple-git-hooks: 2.13.1
-  tsdown: 0.18.3
+  tsdown: 0.18.4
   tsx: 4.21.0
   typescript: 5.9.3
   ufo: ^1.6.1
