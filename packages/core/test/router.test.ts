@@ -354,7 +354,7 @@ describe('router:render', () => {
   it('should return an empty array for a non-matched route', () => {
     const registry = new Map<VRouteId, VRouteNormalized>()
     const fakeData = { id: ['/', 0] as const, meta: {}, params: undefined }
-    const list = createRenderList(fakeData as VRouteMatchedData, registry)
+    const list = createRenderList(fakeData, registry)
     expect(list).toEqual([])
   })
 })
